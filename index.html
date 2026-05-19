@@ -1,0 +1,529 @@
+
+<h2 class="sr-only">AI Calculator 2.0 — Kalkulator Potencjału Automatyzacji dla Kontroli Kredytowej B2B, 12 procesów, 7 sekcji raportu</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+.hdr{border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:12px;margin-bottom:14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.hdr-left{display:flex;align-items:center;gap:10px}
+.hdr-logo{width:36px;height:36px;border-radius:8px;background:var(--color-background-info);display:flex;align-items:center;justify-content:center;color:var(--color-text-info);font-size:18px;flex-shrink:0}
+.hdr-title{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.hdr-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.hdr-version{font-size:10px;font-weight:500;letter-spacing:.08em;color:var(--color-text-secondary);text-transform:uppercase;border:0.5px solid var(--color-border-secondary);padding:3px 8px;border-radius:99px;white-space:nowrap;align-self:flex-start}
+
+.params{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:14px}
+.params-label{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.params-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.pf label{font-size:11px;color:var(--color-text-secondary);display:block;margin-bottom:3px}
+.pf-row{display:flex;align-items:center;gap:8px}
+.pf-val{font-size:13px;font-weight:500;color:var(--color-text-primary);min-width:38px;text-align:right;font-variant-numeric:tabular-nums}
+.formula-note{margin-top:8px;font-size:10px;color:var(--color-text-secondary);background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 10px;font-family:var(--font-mono)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;border-top-width:2px}
+.kpi.g{border-top-color:#1D9E75}.kpi.b{border-top-color:#378ADD}.kpi.a{border-top-color:#BA7517}.kpi.r{border-top-color:#E24B4A}
+.kpi-l{font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:3px}
+.kpi-v{font-size:19px;font-weight:500;color:var(--color-text-primary);font-variant-numeric:tabular-nums;line-height:1}
+.kpi-s{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+
+.tabs{display:flex;gap:2px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px}
+.tab{font-size:11px;padding:7px 11px;border:none;background:none;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.tab.on{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
+.tab:hover:not(.on){color:var(--color-text-primary)}
+
+.panel{display:none}.panel.on{display:block}
+
+.sec-head{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+
+.tbl-wrap{overflow-x:auto;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg)}
+table.t{width:100%;border-collapse:collapse;font-size:11px;table-layout:auto}
+table.t thead th{background:var(--color-background-secondary);font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);padding:7px 9px;border-bottom:0.5px solid var(--color-border-tertiary);white-space:nowrap;text-align:left}
+table.t tbody td{padding:8px 9px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:middle;color:var(--color-text-primary)}
+table.t tbody tr:last-child td{border-bottom:none}
+table.t tbody tr:hover td{background:var(--color-background-secondary)}
+table.t .n{text-align:right;font-variant-numeric:tabular-nums}
+table.t .d{color:var(--color-text-secondary)}
+table.t tfoot td{background:var(--color-background-secondary);padding:7px 9px;font-size:11px;border-top:0.5px solid var(--color-border-secondary)}
+
+.ri{width:50px;padding:3px 5px;font-size:11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);text-align:center;font-variant-numeric:tabular-nums}
+.ri:focus{outline:none;box-shadow:0 0 0 2px var(--color-border-info)}
+
+.pill{display:inline-block;font-size:9px;font-weight:500;padding:2px 6px;border-radius:99px;white-space:nowrap}
+.pG{background:#EAF3DE;color:#3B6D11}.pY{background:#FAEEDA;color:#854F0B}.pR{background:#FCEBEB;color:#A32D2D}.pB{background:#E6F1FB;color:#185FA5}
+
+.mb{display:inline-block;vertical-align:middle;width:36px;height:3px;border-radius:2px;background:var(--color-background-secondary);overflow:hidden;margin-left:3px}
+.mb-f{height:100%;border-radius:2px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-bottom:14px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:11px 13px}
+.card-ico{font-size:18px;color:var(--color-text-secondary);margin-bottom:6px}
+.card-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.card-b{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.card-tag{margin-top:7px;font-size:10px;color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:2px 7px;display:inline-block}
+.card-pilot{margin-top:7px;font-size:10px;color:var(--color-text-secondary);border-top:0.5px solid var(--color-border-tertiary);padding-top:6px;line-height:1.5}
+.rank-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-bottom:6px;flex-shrink:0}
+
+.pcard{border:0.5px solid var(--color-border-tertiary);border-left:3px solid #E24B4A;border-radius:0;padding:11px 13px;margin-bottom:8px}
+.pcard:last-child{margin-bottom:0}
+.pcard-h{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.pcard-t{font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1}
+.pcard-b{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.pcard-ai{margin-top:6px;font-size:10px;color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:2px 7px;display:inline-block}
+
+.fl{display:flex;gap:9px;align-items:flex-start;background:#FCEBEB;border:0.5px solid #F7C1C1;border-radius:var(--border-radius-md);padding:9px 11px;margin-bottom:7px}
+.fl:last-child{margin-bottom:0}
+.fl-i{color:#A32D2D;font-size:16px;flex-shrink:0;margin-top:1px}
+.fl-t{font-size:11px;font-weight:500;color:#A32D2D;margin-bottom:2px}
+.fl-b{font-size:10px;color:#791F1F;line-height:1.5}
+
+.mstep{display:flex;gap:11px;align-items:flex-start;border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 0}
+.mstep:last-child{border-bottom:none}
+.ms-n{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:var(--color-background-info);color:var(--color-text-info);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+.ms-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.ms-b{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+
+.teams{background:var(--color-background-info);border:0.5px solid var(--color-border-info);border-radius:var(--border-radius-lg);padding:13px 15px;margin-top:14px}
+.teams-h{font-size:9px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-info);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.teams-b{font-size:12px;color:var(--color-text-info);line-height:1.6}
+
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:10px;color:var(--color-text-secondary)}
+.leg{display:flex;align-items:center;gap:4px}
+
+.mgr-box{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);padding:12px 14px;margin-bottom:14px}
+.mgr-box p{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:6px}
+.mgr-box p:last-child{margin-bottom:0}
+
+.skill-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px}
+.sk{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 11px}
+.sk-i{font-size:17px;color:var(--color-text-secondary);margin-bottom:4px}
+.sk-t{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.sk-b{font-size:10px;color:var(--color-text-secondary);line-height:1.5}
+</style>
+
+<div style="padding:1rem 0">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-logo"><i class="ti ti-building-bank" aria-hidden="true"></i></div>
+    <div>
+      <div class="hdr-title">AI Calculator 2.0 — Ekspert ds. Transformacji AI</div>
+      <div class="hdr-sub">Dział: Kontrola Kredytowa B2B · Branża: materiały budowlane · 12 procesów · Wzór: (pow. × czas × %AI) × realizm</div>
+    </div>
+  </div>
+  <div class="hdr-version">AI Calculator 2.0</div>
+</div>
+
+<div class="params">
+  <div class="params-label"><i class="ti ti-adjustments-horizontal" aria-hidden="true"></i>Parametry operacyjne działu</div>
+  <div class="params-grid">
+    <div class="pf">
+      <label>Liczba osób w dziale</label>
+      <div class="pf-row"><input type="range" min="1" max="20" value="5" step="1" id="sP" style="flex:1"><span class="pf-val" id="vP">5</span></div>
+    </div>
+    <div class="pf">
+      <label>Stawka (PLN/h)</label>
+      <div class="pf-row"><input type="range" min="40" max="250" value="85" step="5" id="sR" style="flex:1"><span class="pf-val" id="vR">85</span></div>
+    </div>
+    <div class="pf">
+      <label>Współczynnik realizmu</label>
+      <div class="pf-row"><input type="range" min="0.2" max="1.0" value="0.6" step="0.05" id="sF" style="flex:1"><span class="pf-val" id="vF">0.60</span></div>
+    </div>
+    <div class="pf">
+      <label>Godz. pracy / os. / m-c</label>
+      <div class="pf-row"><input type="range" min="120" max="200" value="168" step="4" id="sH" style="flex:1"><span class="pf-val" id="vH">168</span></div>
+    </div>
+  </div>
+  <div class="formula-note">Wzór: Oszczędność = (pow./os. × Liczba osób × czas/pow. [h] × %wsparcia AI) × współczynnik realizmu</div>
+</div>
+
+<div class="kpis">
+  <div class="kpi g"><div class="kpi-l">Oszczędność czasu</div><div class="kpi-v" id="k1">—</div><div class="kpi-s">godz. / miesiąc</div></div>
+  <div class="kpi b"><div class="kpi-l">Oszczędność PLN / m-c</div><div class="kpi-v" id="k2">—</div><div class="kpi-s">przy wsp. realizmu</div></div>
+  <div class="kpi a"><div class="kpi-l">Potencjał roczny</div><div class="kpi-v" id="k3">—</div><div class="kpi-s">PLN / rok</div></div>
+  <div class="kpi r"><div class="kpi-l">Ekwiwalent FTE</div><div class="kpi-v" id="k4">—</div><div class="kpi-s">etaty odzyskane</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="sw('s1',this)"><i class="ti ti-table" aria-hidden="true"></i>Tabela AI</button>
+  <button class="tab" onclick="sw('s2',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i>Analiza</button>
+  <button class="tab" onclick="sw('s3',this)"><i class="ti ti-trophy" aria-hidden="true"></i>Quick Wins</button>
+  <button class="tab" onclick="sw('s4',this)"><i class="ti ti-shield" aria-hidden="true"></i>Chronione</button>
+  <button class="tab" onclick="sw('s5',this)"><i class="ti ti-brain" aria-hidden="true"></i>Reskilling</button>
+  <button class="tab" onclick="sw('s6',this)"><i class="ti ti-alert-triangle" aria-hidden="true"></i>Red Flags</button>
+  <button class="tab" onclick="sw('s7',this)"><i class="ti ti-briefcase" aria-hidden="true"></i>Manager</button>
+</div>
+
+<div class="panel on" id="s1">
+  <div class="sec-head"><i class="ti ti-table" aria-hidden="true"></i>Główna tabela kalkulatora AI · edytuj pow./os. aby przeliczyć</div>
+  <div class="legend">
+    <span class="leg">🟢 Automatyzuj — wysoki AI, niskie ryzyko</span>
+    <span class="leg">🟡 Augmentacja — AI + human-in-the-loop</span>
+    <span class="leg">🔴 Ochrona ludzka — empatia / prawo / relacje</span>
+    <span class="leg">🔵 Redesign / Reskill — przebuduj proces</span>
+  </div>
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead>
+        <tr>
+          <th style="min-width:175px">Zadanie</th>
+          <th>Heatmapa</th>
+          <th>Wolumen<br>(os.×pow./m-c)</th>
+          <th>Pow./os.<br>(edytuj)</th>
+          <th>Czas/pow.<br>[min]</th>
+          <th>Obecny czas<br>[godz./m-c]</th>
+          <th>Oszczędność AI<br>[godz.]</th>
+          <th>Łatwość<br>(1–5)</th>
+          <th>Ryzyko<br>(1–5)</th>
+          <th>Właściciel i szkolenie</th>
+          <th>Pilot (2 tyg.)</th>
+          <th>Skalowalność BU</th>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" style="font-size:10px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.04em">Suma działu</td>
+          <td class="n" style="font-weight:500" id="ft1">—</td>
+          <td class="n" style="font-weight:500;color:#1D9E75" id="ft2">—</td>
+          <td colspan="5"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<div class="panel" id="s2">
+  <div class="sec-head"><i class="ti ti-chart-bar" aria-hidden="true"></i>Macierz potencjału AI vs ryzyko</div>
+  <div class="legend" style="margin-bottom:8px">
+    <span class="leg"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#85B7EB"></span>Potencjał AI</span>
+    <span class="leg"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#F09595"></span>Ryzyko</span>
+  </div>
+  <div style="position:relative;width:100%;height:280px;margin-bottom:16px">
+    <canvas id="cA" role="img" aria-label="Wykres: potencjał AI i ryzyko dla 12 zadań Kontroli Kredytowej">Dane w tabeli.</canvas>
+  </div>
+  <div class="sec-head"><i class="ti ti-clock" aria-hidden="true"></i>Oszczędność godzinowa / miesiąc (po współczynniku realizmu)</div>
+  <div style="position:relative;width:100%;height:240px">
+    <canvas id="cB" role="img" aria-label="Wykres: oszczędność godzinowa dla 12 zadań">Dane w tabeli.</canvas>
+  </div>
+</div>
+
+<div class="panel" id="s3">
+  <div class="sec-head"><i class="ti ti-trophy" aria-hidden="true"></i>Top 3 Quick Wins — od czego zacząć transformację</div>
+  <div class="cards" id="qw-list"></div>
+</div>
+
+<div class="panel" id="s4">
+  <div class="sec-head"><i class="ti ti-shield" aria-hidden="true"></i>Top 3+ zadania chronione — nie wolno w pełni automatyzować</div>
+  <div id="prot-list"></div>
+</div>
+
+<div class="panel" id="s5">
+  <div class="sec-head"><i class="ti ti-brain" aria-hidden="true"></i>Lista nowych kompetencji — reskilling działu</div>
+  <div class="skill-g" id="skill-list"></div>
+</div>
+
+<div class="panel" id="s6">
+  <div class="sec-head"><i class="ti ti-alert-triangle" aria-hidden="true"></i>AI Red Flags — sygnały do natychmiastowego wstrzymania</div>
+  <div id="flag-list"></div>
+</div>
+
+<div class="panel" id="s7">
+  <div class="sec-head"><i class="ti ti-briefcase" aria-hidden="true"></i>Rekomendacja dla managera — plan od poniedziałku</div>
+  <div class="mgr-box">
+    <p>Priorytet nr 1 to natychmiastowe uruchomienie automatycznego dunningu (przypomnień o płatnościach) — niskie ryzyko, gotowe narzędzia SaaS, mierzalny efekt w cash flow w ciągu 2–4 tygodni. Równolegle wdrożenie automatycznych raportów aging w Power BI eliminuje kilkanaście godzin ręcznej pracy miesięcznie przy zerowym ryzyku decyzyjnym.</p>
+    <p>W ciągu miesiąca należy zdefiniować politykę AI dla działu: które dane wolno przetwarzać przez zewnętrzne LLM, kto zatwierdza zmiany limitów kredytowych i jakie są progi eskalacji przy automatycznych blokadach zamówień.</p>
+    <p>Zadania chronione — negocjacje z klientami, blokady/odblokowania zamówień, decyzje o limitach — pozostają przy człowieku. AI dostarcza tu jedynie dane i rekomendacje, nigdy nie decyduje autonomicznie.</p>
+  </div>
+  <div class="sec-head"><i class="ti ti-list-check" aria-hidden="true"></i>Plan 5 kroków</div>
+  <div id="mgr-steps"></div>
+  <div class="teams">
+    <div class="teams-h"><i class="ti ti-brand-teams" aria-hidden="true"></i>Komunikat change management — Teams / Slack</div>
+    <div class="teams-b">Hej zespół! Wdrażamy AI — nie po to, żeby zastąpić ludzi, ale żeby zdjąć z naszych barków żmudne, powtarzalne zadania: dunning, raporty aging, kontrola faktur. Dzięki temu zyskamy czas na to, co naprawdę wymaga naszego doświadczenia — decyzje kredytowe, relacje z klientami i współpraca ze sprzedażą. AI zajmuje się nudną rutyną, my zachowujemy to, co ważne i niepowtarzalne.</div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const TASKS=[
+  {name:"Maile — płatności i faktury",heat:"🟡",hc:"pY",rec:"AUGMENT",ai:5,risk:3,ease:4,reps:40,mins:20,aiPct:.55,
+   owner:"Spec. AR · AI literacy, walidacja draftów",pilot:"Copilot Outlook: klasyfikacja + szkic odpowiedzi dla 1 osoby przez 2 tyg. Mierz: czas/mail",
+   cee:"Tak – Global",qw:false,prot:false,
+   tool:"LLM / Copilot Outlook / agent mailowy"},
+  {name:"Kontakt — zaległe płatności",heat:"🔴",hc:"pR",rec:"OCHRONA",ai:4,risk:4,ease:3,reps:30,mins:25,aiPct:.30,
+   owner:"Spec. windykacji · skrypty AI, notatniki",pilot:"AI przygotowuje historię klienta + szkic maila PRZED każdym kontaktem. Mierz czas przygotowania.",
+   cee:"Tak – Local",qw:false,prot:true,
+   protWhy:"Windykacja wymaga tonu, empatii i wyczucia relacji handlowej. Błąd w komunikacji może doprowadzić do utraty klienta B2B o wysokiej wartości.",aiSup:"AI przygotowuje skrypt rozmowy i historię klienta, człowiek prowadzi kontakt",
+   tool:"LLM + voice-to-text / asystent windykacyjny"},
+  {name:"Raporty aging / overdue / DSO",heat:"🟢",hc:"pG",rec:"AUTOMATE",ai:5,risk:2,ease:5,reps:4,mins:90,aiPct:.75,
+   owner:"Credit Manager + BI · Power BI, alerty",pilot:"Automatyczny raport aging w Power BI z komentarzem AI. Mierz: trafność vs ręczny raport, 2 tyg.",
+   cee:"Tak – Global",qw:true,qwRank:2,
+   qwWhy:"Zadanie cykliczne, oparte wyłącznie na danych, niskie ryzyko decyzyjne. Efekt widoczny od pierwszego tygodnia.",
+   pilotTxt:"Automatyczny raport aging w Power BI z komentarzem AI — mierz trafność vs ręczny przez 2 tygodnie.",
+   tool:"Power BI / Tableau AI / Julius AI",prot:false},
+  {name:"Analiza dokumentów finansowych",heat:"🟡",hc:"pY",rec:"AUGMENT",ai:4,risk:4,ease:3,reps:10,mins:60,aiPct:.40,
+   owner:"Credit Analyst · Document AI, scoring",pilot:"AI streszcza 10 sprawozdań. Mierz: % poprawnie wykrytych red flags vs analiza ręczna.",
+   cee:"Tak – Local",qw:false,prot:true,
+   protWhy:"Decyzja kredytowa wymaga odpowiedzialności prawnej i interpretacji kontekstu. AI wskazuje ryzyka, ale decyzja o limicie musi należeć do człowieka.",aiSup:"AI ekstrahuje dane, streszcza red flags i przygotowuje wstępny scoring",
+   tool:"Document AI / OCR + LLM analityczny"},
+  {name:"Aktualizacja danych / limitów ERP",heat:"🔵",hc:"pB",rec:"REDESIGN",ai:3,risk:4,ease:2,reps:20,mins:10,aiPct:.25,
+   owner:"Credit Manager + IT · workflow, governance",pilot:"Workflow: AI proponuje zmianę limitu → manager klika 'zatwierdź'. Pilot na 5 klientach.",
+   cee:"Tak – Global",qw:false,prot:false,
+   tool:"Workflow RPA + human-in-the-loop"},
+  {name:"Kontrola faktur i zgodności z umowami",heat:"🟢",hc:"pG",rec:"AUTOMATE",ai:5,risk:3,ease:4,reps:80,mins:12,aiPct:.65,
+   owner:"Spec. AR + IT · OCR/IDP, wyjątki",pilot:"OCR sprawdza 50 faktur vs umowy. Mierz: % wykrytych niezgodności vs ręczna kontrola.",
+   cee:"Tak – Global",qw:true,qwRank:3,
+   qwWhy:"Największy wolumen, bardzo wysoka powtarzalność, natychmiastowy mierzalny ROI. Model: AI sprawdza wszystko, człowiek obsługuje wyjątki (<15%).",
+   pilotTxt:"OCR vs 50 faktur i umów — mierz % wykrytych niezgodności vs kontrola ręczna przez 2 tygodnie.",
+   tool:"OCR / IDP / anomaly detection",prot:false},
+  {name:"Zapytania klientów — rozliczenia",heat:"🟡",hc:"pY",rec:"AUGMENT",ai:4,risk:3,ease:3,reps:50,mins:8,aiPct:.50,
+   owner:"Spec. AR · chatbot, eskalacje",pilot:"Chatbot odpowiada na 20 typowych pytań FAQ. Mierz: % poprawnych odpowiedzi, czas do odpowiedzi.",
+   cee:"Tak – Global",qw:false,prot:false,
+   tool:"Chatbot AR / RAG na dokumentach"},
+  {name:"Zestawienia i raporty dla managementu",heat:"🟡",hc:"pY",rec:"AUGMENT",ai:4,risk:3,ease:4,reps:2,mins:120,aiPct:.55,
+   owner:"Credit Manager · AI commentary, weryfikacja",pilot:"AI generuje komentarz do raportu DSO. Manager ocenia jakość vs własny komentarz.",
+   cee:"Tak – Global",qw:false,prot:false,
+   tool:"Power BI + LLM / Copilot / narrative AI"},
+  {name:"Wyszukiwanie info o klientach",heat:"🔵",hc:"pB",rec:"REDESIGN",ai:4,risk:3,ease:3,reps:30,mins:15,aiPct:.50,
+   owner:"Spec. AR + IT · RAG, kontrola dostępu",pilot:"Agent zbiera dane klienta z ERP+CRM+maili. Mierz czas vs ręczne wyszukiwanie.",
+   cee:"Tak – Global",qw:false,prot:false,
+   tool:"Enterprise search / RAG / Glean"},
+  {name:"Warunki płatności — Sales",heat:"🔴",hc:"pR",rec:"OCHRONA",ai:3,risk:5,ease:2,reps:15,mins:20,aiPct:.15,
+   owner:"Credit Manager · symulacje AI, negocjacje",pilot:"AI pokazuje symulację DSO i historię klienta przed spotkaniem Sales. Zbierz feedback.",
+   cee:"Nie – Zbyt specyficzne",qw:false,prot:true,
+   protWhy:"Łączy ocenę ryzyka, relacje handlowe, strategię klienta i odpowiedzialność biznesową. Warunki płatności to decyzja negocjacyjna — musi pozostać przy człowieku.",aiSup:"AI dostarcza symulacje scenariuszy i historię klienta jako dane pomocnicze",
+   tool:"AI decision support / symulator — tylko wsparcie"},
+  {name:"Blokady / odblokowania zamówień",heat:"🔴",hc:"pR",rec:"OCHRONA",ai:4,risk:5,ease:3,reps:25,mins:12,aiPct:.30,
+   owner:"Credit Manager · governance AI, workflow",pilot:"AI rekomenduje blokadę/odblokowanie, manager zatwierdza. Mierz czas decyzji i trafność.",
+   cee:"Tak – Local",qw:false,prot:true,
+   protWhy:"Decyzja wpływa bezpośrednio na sprzedaż, logistykę i cash flow. Błędna blokada może zerwać relację z kluczowym klientem B2B.",aiSup:"AI analizuje limit, aging i ryzyko i przygotowuje rekomendację z uzasadnieniem",
+   tool:"Rule-based + AI scoring + workflow akceptacji"},
+  {name:"Dunning — przypomnienia o płatnościach",heat:"🟢",hc:"pG",rec:"AUTOMATE",ai:5,risk:1,ease:5,reps:60,mins:8,aiPct:.80,
+   owner:"Spec. AR + IT · konfiguracja, eskalacje",pilot:"Sekwencja 1/2/3 dunning na 30 klientach niskiego ryzyka. Mierz: wskaźnik płatności vs manualne.",
+   cee:"Tak – Global",qw:true,qwRank:1,
+   qwWhy:"Najwyższy potencjał AI, najniższe ryzyko, zerojedynkowe reguły, gotowe narzędzia SaaS, natychmiastowy efekt w cash flow.",
+   pilotTxt:"Sekwencja 1/2/3 dunning na 30 klientach niskiego ryzyka — mierz wskaźnik płatności vs manualne po 2 tygodniach.",
+   tool:"RPA / agent mailowy / LLM personalizacja",prot:false}
+];
+
+const SKILLS=[
+  {i:"ti-robot",t:"AI literacy / LLM",b:"Pisanie promptów, weryfikacja odpowiedzi AI, rozumienie halucynacji i ograniczeń modeli."},
+  {i:"ti-chart-line",t:"Data literacy AR",b:"Aging, DSO, overdue, jakość danych wejściowych — AI działa tylko na dobrych danych."},
+  {i:"ti-report-analytics",t:"BI i dashboardy",b:"Czytanie KPI, interpretacja alertów AI, obsługa Power BI / Tableau / Julius AI."},
+  {i:"ti-file-text",t:"OCR / IDP",b:"Sprawdzanie wyjątków ekstrakcji dokumentów, oznaczanie błędów, uczenie modelu."},
+  {i:"ti-git-branch",t:"Zarządzanie wyjątkami",b:"Rozróżnianie spraw automatycznych, AI-wspieranych i wymagających eskalacji człowieka."},
+  {i:"ti-shield-lock",t:"AI governance",b:"Polityki danych, kontrola dostępu, co wolno wklejać do zewnętrznych LLM (RODO)."},
+  {i:"ti-settings-automation",t:"Projektowanie procesów",b:"AS-IS → TO-BE, punkty automatyzacji, human-in-the-loop, KPI transformacji AI."},
+  {i:"ti-messages",t:"Komunikacja z AI",b:"AI przygotowuje kontekst rozmowy, człowiek zachowuje odpowiedzialność za relację."}
+];
+
+const FLAGS=[
+  {t:"Halucynacje w dokumentach finansowych",b:"AI generuje nieprawidłowe kwoty, NIP-y lub daty w fakturach i raportach — natychmiast wstrzymaj i wprowadź obowiązkową weryfikację człowieka dla każdego outputu finansowego."},
+  {t:"Autonomiczne zmiany limitów kredytowych w ERP",b:"AI modyfikuje limity bez ścieżki akceptacji — ryzyko błędnych blokad zamówień, ekspozycji kredytowej i naruszenia polityki ryzyka."},
+  {t:"Wyciek danych klientów do publicznych LLM",b:"Pracownicy wklejają sprawozdania finansowe lub historię płatności do ChatGPT/Gemini — naruszenie RODO, NDA z klientami i polityki bezpieczeństwa IT."},
+  {t:"Automatyczny dunning do klientów strategicznych",b:"Ponaglenia trafiają do kluczowych klientów B2B podczas trwających negocjacji lub sporów handlowych — ryzyko utraty konta i eskalacji prawnej."}
+];
+
+const MGR_STEPS=[
+  {n:"01",t:"Poniedziałek — audyt danych ERP",b:"Sprawdź kompletność danych: aging, historia płatności, limity, statusy klientów. AI działa tylko na wiarygodnych danych wejściowych."},
+  {n:"02",t:"Tydzień 1 — pilot dunning",b:"Uruchom automatyczne sekwencje przypomnień 1/2/3 dla segmentu niskiego ryzyka. Mierz wskaźnik płatności i czas pracy zespołu."},
+  {n:"03",t:"Tydzień 2 — Power BI aging",b:"Skonfiguruj automatyczny raport aging z komentarzem AI. Cel: eliminacja ręcznego przygotowywania raportów tygodniowych."},
+  {n:"04",t:"Miesiąc 1 — polityka AI (governance)",b:"Zdefiniuj: co wolno automatyzować bez nadzoru, co wymaga akceptacji człowieka, jakich danych nie wolno eksportować do zewnętrznych narzędzi."},
+  {n:"05",t:"Miesiące 2–3 — IDP kontrola faktur",b:"Wdróż OCR/IDP do weryfikacji faktur. Cel: AI sprawdza 100% faktur, człowiek obsługuje <15% wyjątków. Mierz DSO i % błędnych faktur."}
+];
+
+const HC={pG:"🟢",pY:"🟡",pR:"🔴",pB:"🔵"};
+
+function P(){
+  return {
+    ppl:parseInt(document.getElementById('sP').value),
+    rate:parseInt(document.getElementById('sR').value),
+    real:parseFloat(document.getElementById('sF').value),
+    hpm:parseInt(document.getElementById('sH').value)
+  };
+}
+
+function calcH(t,ppl){return(t.reps*ppl*t.mins)/60}
+function calcS(t,ppl,real){return Math.round(calcH(t,ppl)*t.aiPct*real)}
+
+function mb(v,max,col){return`<span class="mb"><span class="mb-f" style="width:${Math.round(v/max*100)}%;background:${col}"></span></span>`}
+
+function renderTable(){
+  const {ppl,real}=P();
+  const tb=document.getElementById('tb');
+  tb.innerHTML='';
+  let totH=0,totS=0;
+  TASKS.forEach((t,i)=>{
+    const vol=`${ppl}×${t.reps}`;
+    const h=Math.round(calcH(t,ppl));
+    const s=calcS(t,ppl,real);
+    totH+=h;totS+=s;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td style="font-weight:500;font-size:11px">${t.name}</td>
+      <td style="font-size:14px;text-align:center">${t.heat} <span class="pill ${t.hc}" style="font-size:9px">${t.rec}</span></td>
+      <td class="n d">${vol}</td>
+      <td class="n"><input class="ri" type="number" min="1" max="500" value="${t.reps}" data-i="${i}"></td>
+      <td class="n d">${t.mins}'</td>
+      <td class="n">${h}h</td>
+      <td class="n" style="color:#1D9E75;font-weight:500">+${s}h</td>
+      <td class="n d">${t.ease}/5${mb(t.ease,5,'#1D9E75')}</td>
+      <td class="n d">${t.risk}/5${mb(t.risk,5,'#E24B4A')}</td>
+      <td class="d" style="font-size:10px">${t.owner}</td>
+      <td class="d" style="font-size:10px">${t.pilot}</td>
+      <td style="font-size:10px"><span class="pill" style="background:${t.cee.startsWith('Tak – G')?'#EAF3DE':t.cee.startsWith('Tak – L')?'#E6F1FB':'#FAEEDA'};color:${t.cee.startsWith('Tak – G')?'#3B6D11':t.cee.startsWith('Tak – L')?'#185FA5':'#854F0B'}">${t.cee}</span></td>
+    `;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('.ri').forEach(inp=>{
+    inp.addEventListener('change',function(){
+      const i=parseInt(this.dataset.i);
+      TASKS[i].reps=Math.max(1,parseInt(this.value)||1);
+      this.value=TASKS[i].reps;
+      recalc();
+    });
+  });
+  document.getElementById('ft1').textContent=totH+'h';
+  document.getElementById('ft2').textContent='+'+totS+'h';
+  return{totH,totS};
+}
+
+function updateKPIs(){
+  const {ppl,rate,real,hpm}=P();
+  let totS=0;
+  TASKS.forEach(t=>{totS+=calcS(t,ppl,real);});
+  const pln=totS*rate;
+  document.getElementById('k1').textContent=totS.toLocaleString('pl-PL');
+  document.getElementById('k2').textContent=Math.round(pln).toLocaleString('pl-PL');
+  document.getElementById('k3').textContent=Math.round(pln*12).toLocaleString('pl-PL');
+  document.getElementById('k4').textContent=(totS/hpm).toFixed(2);
+}
+
+let cA,cB;
+function renderCharts(){
+  const {ppl,real}=P();
+  const names=TASKS.map(t=>t.name.length>20?t.name.slice(0,18)+'…':t.name);
+  const saves=TASKS.map(t=>calcS(t,ppl,real));
+  if(cA)cA.destroy();
+  cA=new Chart(document.getElementById('cA'),{
+    type:'bar',
+    data:{labels:names,datasets:[
+      {label:'Potencjał AI',data:TASKS.map(t=>t.ai),backgroundColor:'#85B7EB',borderColor:'#378ADD',borderWidth:1},
+      {label:'Ryzyko',data:TASKS.map(t=>t.risk),backgroundColor:'#F09595',borderColor:'#E24B4A',borderWidth:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{font:{size:9},maxRotation:45,autoSkip:false},grid:{display:false}},
+      y:{min:0,max:5,ticks:{stepSize:1},grid:{color:'rgba(120,120,120,0.07)'}}}}
+  });
+  if(cB)cB.destroy();
+  cB=new Chart(document.getElementById('cB'),{
+    type:'bar',
+    data:{labels:names,datasets:[{
+      label:'Oszczędność godz./m-c',
+      data:saves,
+      backgroundColor:saves.map(v=>v>=20?'#5DCAA5':v>=10?'#EF9F27':'#F09595'),
+      borderWidth:0
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{font:{size:9},maxRotation:45,autoSkip:false},grid:{display:false}},
+      y:{ticks:{callback:v=>v+'h'},grid:{color:'rgba(120,120,120,0.07)'}}}}
+  });
+}
+
+function renderQW(){
+  const {ppl,real}=P();
+  const qw=TASKS.filter(t=>t.qw).sort((a,b)=>a.qwRank-b.qwRank);
+  const colors=['#1D9E75','#378ADD','#BA7517'];
+  const bgs=['#EAF3DE','#E6F1FB','#FAEEDA'];
+  const el=document.getElementById('qw-list');
+  el.innerHTML='';
+  qw.forEach((t,i)=>{
+    const s=calcS(t,ppl,real);
+    const d=document.createElement('div');
+    d.className='card';
+    d.innerHTML=`<div class="rank-dot" style="background:${bgs[i]};color:${colors[i]}">${i+1}</div>
+      <div class="card-t">${t.name}</div>
+      <div class="card-b">${t.qwWhy}</div>
+      <div style="margin-top:6px">
+        <span class="card-tag"><i class="ti ti-robot" aria-hidden="true"></i> ${t.tool}</span>
+        <span class="card-tag" style="margin-left:4px;color:#1D9E75">+${s}h / m-c</span>
+        <span class="card-tag" style="margin-left:4px">${t.cee}</span>
+      </div>
+      <div class="card-pilot"><i class="ti ti-player-play" aria-hidden="true"></i> Pilot 2 tyg.: ${t.pilotTxt}</div>`;
+    el.appendChild(d);
+  });
+}
+
+function renderProt(){
+  const pt=TASKS.filter(t=>t.prot);
+  const el=document.getElementById('prot-list');
+  el.innerHTML='';
+  pt.forEach(t=>{
+    const d=document.createElement('div');
+    d.className='pcard';
+    d.innerHTML=`<div class="pcard-h"><i class="ti ti-shield" style="color:#A32D2D;font-size:15px" aria-hidden="true"></i>
+      <span class="pcard-t">${t.name}</span>
+      <span class="pill pR">${t.heat} ${t.rec}</span></div>
+      <div class="pcard-b">${t.protWhy}</div>
+      ${t.aiSup?`<div class="pcard-ai"><i class="ti ti-robot" aria-hidden="true"></i> AI może: ${t.aiSup}</div>`:''}`;
+    el.appendChild(d);
+  });
+}
+
+function renderSkills(){
+  const el=document.getElementById('skill-list');
+  el.innerHTML='';
+  SKILLS.forEach(s=>{
+    const d=document.createElement('div');d.className='sk';
+    d.innerHTML=`<div class="sk-i"><i class="ti ${s.i}" aria-hidden="true"></i></div><div class="sk-t">${s.t}</div><div class="sk-b">${s.b}</div>`;
+    el.appendChild(d);
+  });
+}
+
+function renderFlags(){
+  const el=document.getElementById('flag-list');
+  el.innerHTML='';
+  FLAGS.forEach(f=>{
+    const d=document.createElement('div');d.className='fl';
+    d.innerHTML=`<i class="ti ti-alert-triangle fl-i" aria-hidden="true"></i><div><div class="fl-t">${f.t}</div><div class="fl-b">${f.b}</div></div>`;
+    el.appendChild(d);
+  });
+}
+
+function renderMgr(){
+  const el=document.getElementById('mgr-steps');
+  el.innerHTML='';
+  MGR_STEPS.forEach(m=>{
+    const d=document.createElement('div');d.className='mstep';
+    d.innerHTML=`<div class="ms-n">${m.n}</div><div><div class="ms-t">${m.t}</div><div class="ms-b">${m.b}</div></div>`;
+    el.appendChild(d);
+  });
+}
+
+function recalc(){
+  updateKPIs();
+  renderTable();
+  renderQW();
+  if(document.getElementById('s2').classList.contains('on')) renderCharts();
+}
+
+function sw(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  if(id==='s2')setTimeout(renderCharts,30);
+}
+
+['sP','sR','sF','sH'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',function(){
+    if(id==='sP') document.getElementById('vP').textContent=this.value;
+    if(id==='sR') document.getElementById('vR').textContent=this.value;
+    if(id==='sF') document.getElementById('vF').textContent=parseFloat(this.value).toFixed(2);
+    if(id==='sH') document.getElementById('vH').textContent=this.value;
+    recalc();
+  });
+});
+
+updateKPIs();renderTable();renderQW();renderProt();renderSkills();renderFlags();renderMgr();
+</script>
